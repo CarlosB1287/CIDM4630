@@ -38,8 +38,9 @@ namespace FinalProject
                             DataTable residentTable = database.getResident(full_name);
                             if(residentTable != null)
                                 target_email = appGUI.DisplayResidents(residentTable);
+                                database.SearchResident(full_name);
+                                if(target_email != null){
                                 Console.WriteLine($"Target Email: {target_email}");
-                                database.SearchResident();
                                 // send email to target resident
                                  string serviceConnectionString =  "endpoint=https://crbaca1communicationservice.communication.azure.com/;accesskey=P6aGIlSgzEvOIDlwhBL/XsZc63ddC+D/mf4EhmirGShsSQaabnblXIJ14qk8Or0vwcCwdmZGksv1nUp+Wm2/QA==";
                                     EmailClient emailClient = new EmailClient(serviceConnectionString);
@@ -107,8 +108,36 @@ namespace FinalProject
                                     {
                                         Console.WriteLine($"Error in sending email, {ex}");
                                     }
+                                }
                                     
                             break;
+                                
+                            case 2:
+                                Console.WriteLine("Please input Resident full name:");
+                                string full_name1 = Console.ReadLine();
+                                bool pickedUp = database.processPackage(full_name1);
+                                if(pickedUp){
+                                    Console.WriteLine("package Process");
+                                }
+
+                            break;
+                            case 3:
+                                Console.WriteLine("Please input Resident full name:");
+                                string full_name2 = Console.ReadLine();
+                                bool returned = database.returnedPackage(full_name2);
+                                if(returned){
+                                    Console.WriteLine("returned");
+                                }
+                            break;
+                             case 4:
+                                Console.WriteLine("Please input Resident full name:");
+                                string full_name3 = Console.ReadLine();
+                                DataTable history = database.retrieveHistory(full_name3);
+                                foreach(DataRow row in history.Rows){
+                                    Console.WriteLine($" FullName: {row["full_name"]} \t Agency:{row["agency"]} \t Status:{row["Status"]}");
+                                }
+                            break;
+
                          
                     }
                     

@@ -62,9 +62,7 @@ namespace FinalProject
         }
 
     //perform enrollment check using Stored Procedure "Search" based on staff and full_name
-        public DataTable SearchResident(){
-                Console.WriteLine("Please input Resident full name:");
-                string full_name = Console.ReadLine();
+        public DataTable SearchResident(string full_name){
                  Console.WriteLine("Please input Agency:");
                 string agency = Console.ReadLine();
                  Console.WriteLine("Please input Status:");
@@ -135,5 +133,64 @@ namespace FinalProject
             conn.Close();
             return true;
         }
+         public bool processPackage(string full_name)
+        {
+            try {
+            MySqlConnection conn = new MySqlConnection(connStr);
+            conn.Open();
+            string procedure = "processPackage";
+            MySqlCommand cmd = new MySqlCommand(procedure, conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@full_name1", full_name);
+            cmd.Parameters["@full_name1"].Direction = ParameterDirection.Input;
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+
+            rdr.Close();
+            conn.Close();
+            return true;
+            }
+            catch{return false;}
+        }
+
+         public bool returnedPackage(string full_name)
+        {
+            try {
+            MySqlConnection conn = new MySqlConnection(connStr);
+            conn.Open();
+            string procedure = "returnedPackage";
+            MySqlCommand cmd = new MySqlCommand(procedure, conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@full_name2", full_name);
+            cmd.Parameters["@full_name2"].Direction = ParameterDirection.Input;
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+
+            rdr.Close();
+            conn.Close();
+            return true;
+            }
+            catch{return false;}
+        }
+         public DataTable retrieveHistory(string full_name)
+        {
+            MySqlConnection conn = new MySqlConnection(connStr);
+            conn.Open();
+            string procedure = "retrieveHistory";
+            MySqlCommand cmd = new MySqlCommand(procedure, conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@full_name", full_name);
+            cmd.Parameters["@full_name"].Direction = ParameterDirection.Input;
+
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+
+            DataTable tableEnrollment = new DataTable();
+            tableEnrollment.Load(rdr);
+            rdr.Close();
+            conn.Close();
+            return tableEnrollment;
+        }
+
     }
 }
